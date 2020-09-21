@@ -1,5 +1,4 @@
 # Spotify-Popularity-Predictor
-# Prediction of Region-Wise Popularity for Newly Released Songs
 
 # Members: 
 Rupali Talele  (USC ID - 5048687352)
