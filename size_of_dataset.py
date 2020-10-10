@@ -15,4 +15,4 @@ for filename in filenames:
     no_of_lines = no_of_lines + len(df.index)
     print(f"{filename} - {len(df.index)}")
 
-print(f"Total {no_of_lines}")
+print(f"Total - {no_of_lines}")
