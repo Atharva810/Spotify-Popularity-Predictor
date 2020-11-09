@@ -26,7 +26,7 @@ def random_Search():
     else:
         return '%' + randomCharacter + '%'
 
-country = "ee"
+country = "cr"
 for j in range(40):
     try:
         print(f"j: {j}")
@@ -41,9 +41,9 @@ for j in range(40):
 # print(track_results)
 print(f"Track length: {len(track_results)}")
 
-if os.path.exists("ids.txt"):
-    os.remove("ids.txt")
-with open("ids.txt", "a") as outputfile:
+if os.path.exists("ids4.txt"):
+    os.remove("ids4.txt")
+with open("ids4.txt", "a") as outputfile:
     for id in track_results:
         if id =="":
             continue
@@ -51,7 +51,7 @@ with open("ids.txt", "a") as outputfile:
 
 
 def getTrackIDs():
-    with open("ids.txt", "r") as filename:
+    with open("ids4.txt", "r") as filename:
         id = filename.read().split("\n")
     return id[:-2]
 
