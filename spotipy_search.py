@@ -26,14 +26,18 @@ def random_Search():
     else:
         return '%' + randomCharacter + '%'
 
-country = "us"
+country = "ee"
 for j in range(40):
-    print(f"j: {j}")
-    char = random_Search()
-    for i in range(0, 2000, 50):
-        tracks = sp.search(char, limit=50, offset=i,type="track",market=country)
-        for t in tracks['tracks']['items']:
-            track_results.add(t["id"])
+    try:
+        print(f"j: {j}")
+        char = random_Search()
+        for i in range(0, 2000, 50):
+            
+            tracks = sp.search(char, limit=50, offset=i,type="track",market=country)
+            for t in tracks['tracks']['items']:
+                track_results.add(t["id"])
+    except:
+        break
 # print(track_results)
 print(f"Track length: {len(track_results)}")
 
@@ -58,12 +62,12 @@ print("generated ids")
 def getTrackFeatures():
     df = pd.DataFrame(columns=['name', 'album_name', 'artist_name', 'artist_id', 'album_release_date', 'album_type', 'available_markets', 'length', 'popularity','trackid', 'mode', 'key', 'acousticness', 'danceability', 'energy', 'instrumentalness', 'liveness', 'loudness', 'speechiness', 'valence', 'tempo', 'time_signature'])
     for id in ids:
-        print(id)
+        # print(id)
         try:
             meta = sp.track(id)
-            print(len(meta))
+            # print(len(meta))
             features = sp.audio_features(id)
-            print(len(features))
+            # print(len(features))
         # if len(meta)!=0 and len(features)!=0:
             name = meta['name']
 
@@ -99,15 +103,14 @@ def getTrackFeatures():
             # track = [name, album_name, artist_name, artist_id, album_release_date, album_type, available_markets, length, popularity, trackid,mode, key, acousticness, danceability, energy, instrumentalness, liveness, loudness, speechiness, valence, tempo, time_signature]
 
             df = df.append({"name": name, "album_name": album_name, "artist_name": artist_name, "artist_id": artist_id, "album_release_date": album_release_date, "album_type": album_type, "available_markets": available_markets, "length": length, "popularity": popularity, "trackid": trackid, "mode": mode, "key": key, "acousticness": acousticness, "danceability": danceability, "energy": energy, "instrumentalness": instrumentalness, "liveness": liveness, "loudness": loudness, "speechiness": speechiness, "valence": valence, "tempo": tempo, "time_signature":time_signature}, ignore_index=True)
-            print(len(df))
+            # print(len(df))
         # print("here")
             
             # return track
         except:
             pass
 
-
-    outputfilename = "us.csv"
+    outputfilename = country+".csv"
     if os.path.exists(outputfilename):
         os.remove(outputfilename)
 
