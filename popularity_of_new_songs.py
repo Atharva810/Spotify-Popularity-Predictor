@@ -16,42 +16,79 @@ from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-filenames = os.listdir('./filtered_dataset/')
-filepath = "./filtered_dataset/"
 
-features = ["acousticness", "danceability", "energy", "instrumentalness", "key", "liveness", 
+from collections import Counter
+
+filenames = os.listdir('./searched_songs/')
+filepath = "./searched_songs/"
+
+features = ["acousticness", "danceability", "energy", "instrumentalness", "key", "liveness",
                 "mode", "loudness", "speechiness", "tempo", "valence"]
 
 sum_rfaccuracy=0
 count=0
 lowest_accuracy = 100
-whole_dataset = pd.read_csv("us.csv", encoding='utf-8')
-dataframe = pd.read_csv(filepath+"us.csv", encoding='utf-8')
-merged = pd.read_csv("merged_without_duplicates.csv", encoding='utf-8')
-print(len(dataframe))
+whole_dataset = pd.read_csv(filepath+"us.csv", encoding='utf-8')
 
+
+def detect_outliers(df, features):
+    outlier_indices = []
+
+    for c in features:
+        # 1st quartile
+        Q1 = np.percentile(df[c], 25)
+        # 3rd quartile
+        Q3 = np.percentile(df[c], 75)
+        # IQR
+        IQR = Q3 - Q1
+        # Outlier step
+        outlier_step = IQR * 1.5
+        # detect outlier and their indeces
+        outlier_list_col = df[(df[c] < Q1 - outlier_step)
+                              | (df[c] > Q3 + outlier_step)].index  # filtre
+        # store indeces
+        # The extend() extends the list by adding all items of a list (passed as an argument) to the end.
+        outlier_indices.extend(outlier_list_col)
+
+    outlier_indices = Counter(outlier_indices)
+    multiple_outliers = list(i for i, v in outlier_indices.items() if v > 2)
+
+    return multiple_outliers
+
+# dataframe = pd.read_csv(filepath+"us.csv", encoding='utf-8')
+# merged = pd.read_csv("merged_without_duplicates.csv", encoding='utf-8')
+# print(len(dataframe))
+
+
+outlier_features = ["popularity","acousticness", "danceability", "energy", "instrumentalness", "key", "liveness",
+            "mode", "loudness", "speechiness", "tempo", "valence"]
+print(
+    f"outliers {len(whole_dataset.loc[detect_outliers(whole_dataset,outlier_features)])}")
+whole_dataset = whole_dataset.drop(
+    detect_outliers(whole_dataset, outlier_features))
 print(len(whole_dataset))
-whole_dataset = pd.concat([whole_dataset, dataframe])
-whole_dataset = whole_dataset.drop_duplicates(subset=["trackid"])
+print(f"nan: {whole_dataset.columns[whole_dataset.isnull().any()]}")
+# whole_dataset = pd.concat([whole_dataset, dataframe])
+# whole_dataset = whole_dataset.drop_duplicates(subset=["trackid"])
 # whole_dataset = pd.DataFrame(whole_dataset, index=range(len(dataframe)))
-whole_dataset["popularity"] = 0
-for idx, row in dataframe.iterrows():
-    whole_dataset.loc[whole_dataset["trackid"]==row.trackid,"popularity"] = 1
+# whole_dataset["popularity"] = 0
+# for idx, row in dataframe.iterrows():
+#     whole_dataset.loc[whole_dataset["trackid"]==row.trackid,"popularity"] = 1
 
 
-f, ax = plt.subplots(figsize=(12, 12))
-mask = np.zeros_like(dataframe.corr())
-mask[np.triu_indices_from(mask)] = True
-sns.heatmap(dataframe.corr(), annot=True, linewidths=0.4,
-            linecolor="white", fmt='.1f', ax=ax, cmap="Blues", mask=mask)
-plt.show()
+# f, ax = plt.subplots(figsize=(12, 12))
+# mask = np.zeros_like(dataframe.corr())
+# mask[np.triu_indices_from(mask)] = True
+# sns.heatmap(dataframe.corr(), annot=True, linewidths=0.4,
+#             linecolor="white", fmt='.1f', ax=ax, cmap="Blues", mask=mask)
+# plt.show()
 
 
 
 
-f, axes = plt.subplots(3, 5, figsize=(12, 12))
+# f, axes = plt.subplots(3, 5, figsize=(12, 12))
 # sns.distplot(whole_dataset["song_duration_ms"], color="teal", ax=axes[0, 0])
-sns.distplot(whole_dataset["instrumentalness"], color="teal", ax=axes[0, 1])
+# sns.distplot(whole_dataset["instrumentalness"], color="teal", ax=axes[0, 1])
 # sns.distplot(whole_dataset["acousticness"], color="teal", ax=axes[0, 2])
 # sns.distplot(whole_dataset["danceability"], color="teal", ax=axes[0, 3])
 # sns.distplot(whole_dataset["energy"], color="teal", ax=axes[0, 4])
@@ -64,19 +101,23 @@ sns.distplot(whole_dataset["instrumentalness"], color="teal", ax=axes[0, 1])
 # sns.distplot(whole_dataset["speechiness"], color="teal", ax=axes[2, 1])
 # # sns.distplot(whole_dataset["time_signature"], color="teal", ax=axes[2, 2])
 # sns.distplot(whole_dataset["valence"], color="teal", ax=axes[2, 3])
-f.delaxes(axes[2][4])
-plt.show()
+# f.delaxes(axes[2][4])
+# plt.show()
 
 
-
-# threshold = whole_dataset["popularity"].quantile(0.60)
-# print(threshold)
-# whole_dataset.loc[whole_dataset['popularity'] < threshold, 'popularity'] = 0
-# whole_dataset.loc[whole_dataset['popularity'] >= threshold, 'popularity'] = 1
-print(whole_dataset.popularity.value_counts())
+print(pd.isnull(whole_dataset).sum())
+# exit()
+threshold = whole_dataset["popularity"].quantile(0.60)
+print(threshold)
+whole_dataset.loc[whole_dataset['popularity'] < threshold, 'thresholded_popularity'] = 0
+whole_dataset.loc[whole_dataset['popularity']
+                  >= threshold, 'thresholded_popularity'] = 1
+print(whole_dataset.thresholded_popularity.value_counts())
+print(whole_dataset.head())
+# exit()
 training = whole_dataset.sample(frac=1, random_state=420)
 X_train = training[features]
-y_train = training['popularity']
+y_train = training['thresholded_popularity']
 
 X_train, X_valid, y_train, y_valid = train_test_split(
     X_train, y_train, test_size=0.2, random_state=420)
