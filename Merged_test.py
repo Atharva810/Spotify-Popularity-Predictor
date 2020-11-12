@@ -96,9 +96,12 @@ column = ["key", "length", "mode"]
 for file in filenames:
     print(file)
     whole_dataset = pd.read_csv(filepath+file, encoding='utf-8')
+    print(whole_dataset.columns[whole_dataset.isnull().any()])
 
+    # song_data.columns[song_data.isnull().any()]
+    whole_dataset.isnull().sum()
     # In[ ]:
-
+    # exit()
 
     whole_dataset = whole_dataset.loc[:, ~whole_dataset.columns.str.match('Unnamed')]
     # whole_dataset = whole_dataset.drop(detect_outliers(whole_dataset, outlier_features), axis=0).reset_index(drop=True)
@@ -166,6 +169,8 @@ for file in filenames:
 
     # In[ ]:
 
+    x_test = x_test.fillna(0)
+    y_test = y_test.fillna(0)
 
     # whole_dataset.columns[whole_dataset.isnull().any()]
 
@@ -174,7 +179,7 @@ for file in filenames:
 
     rf = RandomForestClassifier(n_estimators=150, random_state=3)
     rf.fit(x_train, y_train)
-    print("Train ccuracy of random forest", rf.score(x_train, y_train))
+    print("Train accuracy of random forest", rf.score(x_train, y_train))
     print("Test accuracy of random forest", rf.score(x_test, y_test))
     RandomForestClassifier_score = rf.score(x_test, y_test)
     y_pred = rf.predict(x_test)
