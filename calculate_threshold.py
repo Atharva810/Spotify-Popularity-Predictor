@@ -91,8 +91,6 @@ for file in filenames:
         threshold_dict[threshold] = [RFC_Accuracy, precision_sum]
     with open("countrywise_analysis\\"+file, "w", encoding='utf-8') as f:
         json.dump(threshold_dict, f)
-    exit()
-    
 
 print(f"Lowest Accuracy: {lowest_accuracy}")
 # with open("countrywise_accuracy.json", "w", encoding='utf-8') as f:
