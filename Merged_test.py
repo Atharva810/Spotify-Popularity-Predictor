@@ -76,14 +76,15 @@ for file in filenames:
     # whole_dataset = whole_dataset.drop(detect_outliers(whole_dataset, outlier_features), axis=0).reset_index(drop=True)
     test_len = int(len(whole_dataset)*0.1)
     test = whole_dataset[:test_len]
-    print(len(test))
-    print(len(whole_dataset))
+    # print(len(test))
+    # print(len(whole_dataset))
     test_df = pd.concat([test,test_df])
-    print(len(test_df))
+    # print(len(test_df))
     test_df.drop_duplicates(subset="trackid",inplace=True)
-    print(len(test_df))
+    # print(len(test_df))
 
 
+print("len of test_df",len(test_df))
 test_df["thresholded_popularity"] = [
     1 if i >= threshold else 0 for i in test_df.popularity]
 

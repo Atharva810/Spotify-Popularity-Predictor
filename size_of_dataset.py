@@ -5,7 +5,8 @@ import pandas as pd
 import numpy as np
 from pathlib import Path
 
-output_dir = Path('D:\\Projects\\Spotify-Popularity-Predictor\\filtered_dataset\\')
+output_dir = Path(
+    'D:\\Projects\\Spotify-Popularity-Predictor\\searched_songs\\')
 filenames = os.listdir(output_dir)
 
 no_of_lines = 0
