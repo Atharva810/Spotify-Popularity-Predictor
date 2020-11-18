@@ -8,7 +8,7 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.svm import SVC, LinearSVC
 from sklearn.model_selection import KFold
 from collections import defaultdict
-from xgboost import XGBClassifier
+# from xgboost import XGBClassifier
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import classification_report, confusion_matrix
 from pprint import pprint
@@ -59,7 +59,7 @@ for file in filenames:
         RFC_Model.fit(X_train, Y_train)
         RFC_Predict = RFC_Model.predict(X_valid)
         RFC_Accuracy = accuracy_score(Y_valid, RFC_Predict)
-
+        print(threshold)
         print("RF Accuracy: " + str(RFC_Accuracy))
         # accuracy_dict[file.split(".")[0]] = RFC_Accuracy
         lowest_accuracy = min(lowest_accuracy, RFC_Accuracy)
