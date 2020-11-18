@@ -40,4 +40,4 @@ plt.bar(keys,values)
 plt.show()
 
 
-worldmap_chart.render_to_file('features.svg')
+worldmap_chart.render_to_file('features2.svg')
