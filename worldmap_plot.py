@@ -4,7 +4,10 @@ import matplotlib.pyplot as plt
 
 worldmap_chart = pygal.maps.world.World()
 worldmap_chart.title = 'Country wise features'
-features_set={'loudness':[],'acousticness':[],'tempo':[],'energy':[],'danceability':[],'liveness':[],'speechiness':[],'valence':[]}
+# features_set={'loudness':[],'length':[],'acousticness':[],'tempo':[],'energy':[],'danceability':[],'liveness':[],'speechiness':[],'valence':[]}
+
+features_set = {"acousticness":[], "danceability":[], "energy":[], "instrumentalness":[], "key":[], "liveness":[],
+            "mode":[], "loudness":[], "speechiness":[], "tempo":[], "valence":[], "length":[], "time_signature":[]}
 
 
 json_file='countrywise_features.json'
@@ -15,7 +18,10 @@ with open(json_file,'r',encoding='utf-8') as file:
         json_object=line
 
 my_dict=json.loads(json_object)
-counts={'loudness':0,'acousticness':0,'tempo':0,'energy':0,'danceability':0,'liveness':0,'speechiness':0,'valence':0}
+# counts={'loudness':0,'acousticness':0,'tempo':0,'energy':0,'danceability':0,'liveness':0,'speechiness':0,'valence':0}
+
+counts = {"acousticness":0, "danceability":0, "energy":0, "instrumentalness":0, "key":0, "liveness":0,
+            "mode":0, "loudness":0, "speechiness":0, "tempo":0, "valence":0, "length":0, "time_signature":0}
 
 for key,value in my_dict.items():
     features_set[value[0][0]].append(key)
