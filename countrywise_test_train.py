@@ -16,17 +16,20 @@ filepath = "./searched_songs/"
 features = ["acousticness", "danceability", "energy", "instrumentalness", "key", "liveness",
             "mode", "loudness", "speechiness", "tempo", "valence", "length", "time_signature"]
 
-threshold_dict = {"ar":0}
+threshold_dict = {"ar": 70, "bo": 70, "br": 70, "cl": 70, "co": 70, "cz": 70, "dk": 70, "do": 70, "fi": 70, "fr": 70,
+                  "gt": 70, "id": 70, "in": 70, "it": 70, "pa": 70, "pe": 70, "ph": 70, "pl": 70, "ru": 70, "tr": 70, "za": 70}
 accuracy_dict = {}
 ones_zeros_dict = {}
 
-threshold = 50
+
 lowest_accuracy = 100
 for file in filenames:
     print(file)
     dataframe = pd.read_csv(filepath+file,encoding='utf-8')    
     country = file.split(".")[0]
-    
+    threshold = 50
+    if country in threshold_dict:
+        threshold = threshold_dict[country]
 
     dataframe.loc[dataframe['popularity'] < threshold, 'thresholded_popularity'] = 0 
     dataframe.loc[dataframe['popularity'] >=
